@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.10">
+<title>Build-Info Gradle Plugin</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<link rel="stylesheet" href="./asciidoctor.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body class="book toc2 toc-left">
+<div id="header">
+<h1>Build-Info Gradle Plugin</h1>
+<div class="details">
+<span id="revnumber">version 0.0.1</span>
+</div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_installation">1. Installation</a></li>
+<li><a href="#_description">2. Description</a></li>
+<li><a href="#_how_to_use_it">3. How to use it</a>
+<ul class="sectlevel2">
+<li><a href="#_micronaut_example">3.1. Micronaut Example</a></li>
+</ul>
+</li>
+<li><a href="#_extension">4. Extension</a></li>
+<li><a href="#_project_build">5. Project Build</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/sdelamo/build-info-gradle-plugin">Code Repository</a></p>
+</li>
+<li>
+<p><a href="https://github.com/sdelamo/build-info-gradle-plugin/releases">Releases</a></p>
+</li>
+<li>
+<p><a href="https://bintray.com/beta/#/groovycalamari/maven/build-info">Artifacts</a></p>
+</li>
+<li>
+<p><a href="https://sdelamo.github.io/build-info-gradle-plugin/groovydoc/index.html">Groovy Docs</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_installation"><a class="anchor" href="#_installation"></a>1. Installation</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Check the installation instructions in the <a href="https://plugins.gradle.org/plugin/groovycalamari.build-info">Gradle Plugin Portal</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_description"><a class="anchor" href="#_description"></a>2. Description</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If a META-INF/build-info.properties file is available on the classpath, <a href="https://micronaut.io">Micronaut framework</a>'s <a href="https://docs.micronaut.io/latest/api/io/micronaut/management/endpoint/info/source/BuildInfoSource.html">BuildInfoSource</a> exposes the values in that file under the <code>build</code> key.</p>
+</div>
+<div class="paragraph">
+<p>This Gradle plugin adds a task <code>generateBuildInfo</code> which is executed before the <code>classes</code> task. The task generates a <code>build-info.properties</code> file at <code>build/classes/java/META-INFO/build-info.properties</code>. The generated properties file includes <code>version</code>, <code>name</code>, <code>group</code> and optionally <code>buildid</code>. <code>buildid</code> is set to value of any of the following environment variables (<a href="https://docs.travis-ci.com/user/environment-variables/#default-environment-variables">TRAVIS_BUILD_ID</a>, <code>GITHUB_RUN_ID</code>, <code>CODEBUILD_BUILD_ID</code>).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_how_to_use_it"><a class="anchor" href="#_how_to_use_it"></a>3. How to use it</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_micronaut_example"><a class="anchor" href="#_micronaut_example"></a>3.1. Micronaut Example</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">% mn create-app example.micronaut.demo --features=management</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Expose info endpoint:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="yaml"><span class="head"><span class="head">---</span></span>
+<span class="key">endpoints</span>:
+  <span class="key">info</span>:
+    <span class="key">enabled</span>: <span class="string"><span class="content">true</span></span>
+    <span class="key">sensitive</span>: <span class="string"><span class="content">false</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>apply the plugin:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy">plugins {
+  ...
+  id <span class="string"><span class="delimiter">&quot;</span><span class="content">groovycalamari.build-info</span><span class="delimiter">&quot;</span></span> version <span class="string"><span class="delimiter">&quot;</span><span class="content">0.0.1</span><span class="delimiter">&quot;</span></span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, run the app and it the <code>/info</code> endpoint:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">% ./gradlew run
+% curl localhost:8080/info
+{&quot;name&quot;:&quot;demo&quot;,&quot;version&quot;:&quot;0.1&quot;,&quot;group&quot;:&quot;com.example&quot;}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_extension"><a class="anchor" href="#_extension"></a>4. Extension</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can override the defaults values with the extension <code>buildInfo</code></p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>property</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>default value</strong></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">output</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>build/classes/java/main/META-INF/build-info.properties</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">buildIdKey</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>buildid</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">versionKey</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>version</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">nameKey</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>name</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">groupKey</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>group</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy">buildInfo {
+    output = <span class="string"><span class="delimiter">&quot;</span><span class="inline"><span class="inline-delimiter">${</span>project.buildDir<span class="inline-delimiter">}</span></span><span class="content">/classes/java/main/META-INF/build-info.properties</span><span class="delimiter">&quot;</span></span>
+    buildIdKey = <span class="string"><span class="delimiter">'</span><span class="content">buildid</span><span class="delimiter">'</span></span>
+    versionKey = <span class="string"><span class="delimiter">'</span><span class="content">version</span><span class="delimiter">'</span></span>
+    nameKey = <span class="string"><span class="delimiter">'</span><span class="content">name</span><span class="delimiter">'</span></span>
+    groupKey = <span class="string"><span class="delimiter">'</span><span class="content">group</span><span class="delimiter">'</span></span>
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_project_build"><a class="anchor" href="#_project_build"></a>5. Project Build</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This library uses <a href="https://gradle.org">Gradle</a>. It uses the plugins:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://kordamp.org/kordamp-gradle-plugins/">Kordamp Gradle Plugins</a></p>
+</li>
+<li>
+<p><a href="https://plugins.gradle.org/plugin/com.gradle.build-scan">Gradle Build Scan Plugins</a></p>
+</li>
+<li>
+<p><a href="https://plugins.gradle.org/plugin/com.gradle.plugin-publish">Gradle Publish Plugin</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Version 0.0.1<br>
+Last updated 2020-10-05 02:29:04 +0200
+</div>
+</div>
+<link rel="stylesheet" href="./coderay-asciidoctor.css">
+</body>
+</html>

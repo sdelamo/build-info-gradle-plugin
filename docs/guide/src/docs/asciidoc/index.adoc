@@ -17,6 +17,8 @@ This Gradle plugin adds a task `generateBuildInfo` which is executed before the 
 
 == How to use it
 
+=== Micronaut Example
+
 [source, bash]
 ----
 % mn create-app example.micronaut.demo --features=management
@@ -84,8 +86,6 @@ buildInfo {
     groupKey = 'group'
 }
 ----
-
-
 
 == Project Build
 

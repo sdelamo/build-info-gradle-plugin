@@ -1,0 +1,96 @@
+= Build-Info Gradle Plugin
+
+- https://github.com/sdelamo/build-info-gradle-plugin[Code Repository]
+- https://github.com/sdelamo/build-info-gradle-plugin/releases[Releases]
+- https://bintray.com/beta/#/groovycalamari/maven/build-info[Artifacts]
+- https://sdelamo.github.io/build-info-gradle-plugin/groovydoc/index.html[Groovy Docs]
+
+== Installation
+
+Check the installation instructions in the https://plugins.gradle.org/plugin/groovycalamari.build-info[Gradle Plugin Portal].
+
+== Description
+
+If a META-INF/build-info.properties file is available on the classpath, https://micronaut.io[Micronaut framework]'s https://docs.micronaut.io/latest/api/io/micronaut/management/endpoint/info/source/BuildInfoSource.html[BuildInfoSource] exposes the values in that file under the `build` key.
+
+This Gradle plugin adds a task `generateBuildInfo` which is executed before the `classes` task. The task generates a `build-info.properties` file at `build/classes/java/META-INFO/build-info.properties`. The generated properties file includes `version`, `name`, `group` and optionally `buildid`. `buildid` is set to value of any of the following environment variables (https://docs.travis-ci.com/user/environment-variables/#default-environment-variables[TRAVIS_BUILD_ID], `GITHUB_RUN_ID`, `CODEBUILD_BUILD_ID`).
+
+== How to use it
+
+[source, bash]
+----
+% mn create-app example.micronaut.demo --features=management
+----
+
+Expose info endpoint:
+
+[source, yaml]
+----
+---
+endpoints:
+  info:
+    enabled: true
+    sensitive: false
+----
+
+apply the plugin:
+
+[source, groovy]
+----
+plugins {
+  ...
+  id "groovycalamari.build-info" version "0.0.1"
+}
+----
+
+Then, run the app and it the `/info` endpoint:
+
+[source, bash]
+----
+% ./gradlew run
+% curl localhost:8080/info
+{"name":"demo","version":"0.1","group":"com.example"}
+----
+
+== Extension
+
+You can override the defaults values with the extension `buildInfo`
+
+[cols="2*"]
+|===
+| **property**
+| **default value**
+| output
+| `build/classes/java/main/META-INF/build-info.properties`
+| buildIdKey
+| `buildid`
+| versionKey
+| `version`
+| nameKey
+| `name`
+| groupKey
+| `group`
+|===
+
+Example:
+
+[source, groovy]
+----
+buildInfo {
+    output = "${project.buildDir}/classes/java/main/META-INF/build-info.properties"
+    buildIdKey = 'buildid'
+    versionKey = 'version'
+    nameKey = 'name'
+    groupKey = 'group'
+}
+----
+
+
+
+== Project Build
+
+This library uses https://gradle.org[Gradle]. It uses the plugins:
+
+- https://kordamp.org/kordamp-gradle-plugins/[Kordamp Gradle Plugins]
+- https://plugins.gradle.org/plugin/com.gradle.build-scan[Gradle Build Scan Plugins]
+- https://plugins.gradle.org/plugin/com.gradle.plugin-publish[Gradle Publish Plugin]

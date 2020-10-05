@@ -21,47 +21,34 @@ import groovy.transform.CompileStatic
 import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.JavaPluginConvention
+import org.gradle.api.tasks.SourceSet
 
 @CompileStatic
 class BuildInfoPlugin implements Plugin<Project> {
     public static final String EXTENSION_NAME_BUILDINFO = "buildInfo"
     public static final String TASK_BUILD_INFO = "generateBuildInfo"
-    public static final String TASK_COMPILE_JAVA = 'compileJava'
-    public static final String TASK_PROCESS_RESOURCES = 'processResources'
-    public static final String TASK_COMPILE_GROOVY = 'compileGroovy'
-    public static final String TASK_COMPILE_KOTLIN = 'compileKotlin'
-    public static final String TASK_CLASSES = 'classes'
     public static final String GROUP_BUILD = "build"
     public static final String DESCRIPTION = "Generates a build info file"
 
     @Override
     void apply(Project project) {
-        BuildInfoExtension extension = project.extensions.create(EXTENSION_NAME_BUILDINFO, BuildInfoExtension.class, project)
-        project.tasks.register(TASK_BUILD_INFO, BuildInfoTask, new Action<BuildInfoTask>() {
+        BuildInfoExtension extension = project.extensions.create(EXTENSION_NAME_BUILDINFO, BuildInfoExtension, project)
+        def buildInfoTask = project.tasks.register(TASK_BUILD_INFO, BuildInfoTask, new Action<BuildInfoTask>() {
             @Override
             void execute(BuildInfoTask buildInfo) {
                 buildInfo.setGroup(GROUP_BUILD)
                 buildInfo.setDescription(DESCRIPTION)
-                buildInfo.getOutput().set(extension.outputFile)
-                buildInfo.getVersionKey().set(extension.versionKey)
-                buildInfo.getNameKey().set(extension.nameKey)
-                buildInfo.getGroupKey().set(extension.groupKey)
-                buildInfo.getBuilIdKey().set(extension.buildIdKey)
-
-                if (project.tasks.findByName(TASK_COMPILE_JAVA)) {
-                    buildInfo.mustRunAfter(TASK_COMPILE_JAVA)
-                }
-                if (project.tasks.findByName(TASK_PROCESS_RESOURCES)) {
-                    buildInfo.mustRunAfter(TASK_PROCESS_RESOURCES)
-                }
-                if (project.tasks.findByName(TASK_COMPILE_GROOVY)) {
-                    buildInfo.mustRunAfter(TASK_COMPILE_GROOVY)
-                }
-                if (project.tasks.findByName(TASK_COMPILE_KOTLIN)) {
-                    buildInfo.mustRunAfter(TASK_COMPILE_KOTLIN)
-                }
+                buildInfo.outputDirectory.convention(extension.outputDirectory)
+                buildInfo.versionKey.convention(extension.versionKey)
+                buildInfo.nameKey.convention(extension.nameKey)
+                buildInfo.groupKey.convention(extension.groupKey)
+                buildInfo.buildIdKey.convention(extension.buildIdKey)
             }
         })
-        project.tasks.findByName(TASK_CLASSES)?.dependsOn(TASK_BUILD_INFO)
+        project.pluginManager.withPlugin('java') {
+            def sourceSets = project.convention.getPlugin(JavaPluginConvention).sourceSets
+            sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME).resources.srcDir(buildInfoTask)
+        }
     }
 }

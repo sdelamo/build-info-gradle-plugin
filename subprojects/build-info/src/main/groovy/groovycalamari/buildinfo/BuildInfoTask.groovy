@@ -19,50 +19,78 @@ package groovycalamari.buildinfo
 
 import groovy.transform.CompileStatic
 import org.gradle.api.DefaultTask
+import org.gradle.api.file.Directory
+import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
+import org.gradle.api.provider.Provider
+import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.Optional
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 
+@CacheableTask
 @CompileStatic
 class BuildInfoTask extends DefaultTask {
     public static final String TRAVIS_BUILD_ID = "TRAVIS_BUILD_ID"
     public static final String GITHUB_BUILD_ID = "GITHUB_RUN_ID"
     public static final String CODEBUILD_BUILD_ID = "CODEBUILD_BUILD_ID"
 
-    private final Property<File> output
-    private final Property<String> versionKey
-    private final Property<String> nameKey
-    private final Property<String> groupKey
-    private final Property<String> buildIdKey
+    @OutputDirectory
+    final DirectoryProperty outputDirectory
+
+    @Input
+    final Property<String> versionKey
+
+    @Input
+    final Property<String> nameKey
+
+    @Input
+    final Property<String> groupKey
+
+    @Input
+    final Property<String> buildIdKey
+
+    @Input
+    @Optional
+    final Provider<String> buildIdProvider
+
+    @Input
+    final Provider<String> versionProvider
+
+    @Input
+    final Provider<String> groupProvider
+
+    @Input
+    final Provider<String> nameProvider
 
     BuildInfoTask() {
-        output = getProject().getObjects().property(File)
-        versionKey = getProject().getObjects().property(String)
-        nameKey = getProject().getObjects().property(String)
-        groupKey = getProject().getObjects().property(String)
-        buildIdKey = getProject().getObjects().property(String)
+        outputDirectory = project.objects.directoryProperty()
+        versionKey = project.objects.property(String)
+        nameKey = project.objects.property(String)
+        groupKey = project.objects.property(String)
+        buildIdKey = project.objects.property(String)
+        buildIdProvider = envVar(TRAVIS_BUILD_ID)
+            .orElse(envVar(GITHUB_BUILD_ID))
+            .orElse(envVar(CODEBUILD_BUILD_ID))
+        versionProvider = project.providers.provider { String.valueOf(project.version) }.forUseAtConfigurationTime()
+        groupProvider = project.providers.provider { String.valueOf(project.group) }.forUseAtConfigurationTime()
+        nameProvider = project.providers.provider { project.name }.forUseAtConfigurationTime()
+    }
+
+    private Provider<String> envVar(String name) {
+        project.providers.environmentVariable(name).forUseAtConfigurationTime()
     }
 
     @TaskAction
     void generateBuildInfo() {
         Properties properties = generateProperties(createLabels(), createValues())
-        File outputFile = output.get()
+        File outputFile = outputDirectory.map { Directory it -> it.file("META-INF/build-info.properties") }.get().asFile
         if (!outputFile.exists()) {
+            outputFile.parentFile.mkdirs()
             outputFile.createNewFile()
         }
         properties.store(outputFile.newOutputStream(), "")
-    }
-
-    private static String parseBuildId() {
-        if (System.getenv(TRAVIS_BUILD_ID)) {
-            return System.getenv(TRAVIS_BUILD_ID)
-        } else if (System.getenv(GITHUB_BUILD_ID)) {
-            return System.getenv(GITHUB_BUILD_ID)
-        } else if (System.getenv(CODEBUILD_BUILD_ID)) {
-            return System.getenv(CODEBUILD_BUILD_ID)
-        }
-        null
     }
 
     private BuildInfoLabels createLabels() {
@@ -93,25 +121,26 @@ class BuildInfoTask extends DefaultTask {
         new BuildInfoValues() {
             @Override
             String getBuildId() {
-                parseBuildId()
+                buildIdProvider.orNull
             }
 
             @Override
             String getVersion() {
-                project.version.toString()
+                versionProvider.get()
             }
 
             @Override
             String getGroup() {
-                project.group.toString()
+                groupProvider.get()
             }
 
             @Override
             String getName() {
-                project.name
+                nameProvider.get()
             }
         }
     }
+
     private static Properties generateProperties(BuildInfoLabels labels, BuildInfoValues values) {
         Properties props = new Properties()
         if (values.buildId) {
@@ -121,30 +150,5 @@ class BuildInfoTask extends DefaultTask {
         props.setProperty(labels.group, values.group)
         props.setProperty(labels.version, values.version)
         props
-    }
-
-    @OutputFile
-    Property<File> getOutput() {
-        return output
-    }
-
-    @Input
-    Property<String> getVersionKey() {
-        return versionKey
-    }
-
-    @Input
-    Property<String> getGroupKey() {
-        return groupKey
-    }
-
-    @Input
-    Property<String> getNameKey() {
-        return nameKey
-    }
-
-    @Input
-    Property<String> getBuilIdKey() {
-        return buildIdKey
     }
 }

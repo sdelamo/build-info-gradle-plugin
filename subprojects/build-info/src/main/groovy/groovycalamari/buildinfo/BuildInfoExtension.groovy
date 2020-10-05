@@ -19,9 +19,8 @@ package groovycalamari.buildinfo
 
 import groovy.transform.CompileStatic
 import org.gradle.api.Project
+import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.OutputFile
 
 @CompileStatic
 class BuildInfoExtension {
@@ -31,24 +30,19 @@ class BuildInfoExtension {
     public static final String DEFAULT_KEY_GROUP = "group"
     public static final String DEFAULT_KEY_NAME = "name"
 
-    @OutputFile
-    private final Property<File> outputFile
+    final DirectoryProperty outputDirectory
 
-    @Input
-    private final Property<String> versionKey
+    final Property<String> versionKey
 
-    @Input
-    private final Property<String> nameKey
+    final Property<String> nameKey
 
-    @Input
-    private final Property<String> groupKey
+    final Property<String> groupKey
 
-    @Input
-    private final Property<String> buildIdKey
+    final Property<String> buildIdKey
 
     BuildInfoExtension(Project project) {
-        outputFile = project.objects.property(File)
-                .convention(project.file("${project.buildDir}/classes/java/main/META-INF/build-info.properties"))
+        outputDirectory = project.objects.directoryProperty()
+                .convention(project.layout.buildDirectory.dir("build-info"))
         buildIdKey = project.objects.property(String)
                 .convention(DEFAULT_KEY_BUILDID)
         versionKey = project.objects.property(String)
@@ -57,25 +51,5 @@ class BuildInfoExtension {
                 .convention(DEFAULT_KEY_GROUP)
         nameKey = project.objects.property(String)
                 .convention(DEFAULT_KEY_NAME)
-    }
-
-    Property<File> getOutputFile() {
-        this.outputFile
-    }
-
-    Property<String> getBuildIdKey() {
-        this.buildIdKey
-    }
-
-    Property<String> getVersionKey() {
-        this.versionKey
-    }
-
-    Property<String> getGroupKey() {
-        this.groupKey
-    }
-
-    Property<String> getNameKey() {
-        this.nameKey
     }
 }

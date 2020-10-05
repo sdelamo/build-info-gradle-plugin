@@ -2,7 +2,7 @@
 
 - https://github.com/sdelamo/build-info-gradle-plugin[Code Repository]
 - https://github.com/sdelamo/build-info-gradle-plugin/releases[Releases]
-- https://bintray.com/beta/#/groovycalamari/maven/build-info[Artifacts]
+- https://bintray.com/beta/#/groovycalamari/maven/build-info-gradle-plugin[Artifacts]
 - https://sdelamo.github.io/build-info-gradle-plugin/groovydoc/index.html[Groovy Docs]
 
 == Installation

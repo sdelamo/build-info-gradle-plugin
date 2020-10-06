@@ -41,7 +41,7 @@ apply the plugin:
 ----
 plugins {
   ...
-  id "groovycalamari.build-info" version "0.0.1"
+  id "groovycalamari.build-info" version "0.0.2"
 }
 ----
 

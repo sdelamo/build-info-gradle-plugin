@@ -45,7 +45,7 @@ plugins {
 }
 ----
 
-Then, run the app and it the `/info` endpoint:
+Then, run the app and hit the `/info` endpoint:
 
 [source, bash]
 ----

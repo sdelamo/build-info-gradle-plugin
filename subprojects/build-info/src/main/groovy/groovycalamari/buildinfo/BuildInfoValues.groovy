@@ -26,4 +26,6 @@ interface BuildInfoValues {
     String getGroup()
 
     String getName()
+
+    String getCommitSha()
 }

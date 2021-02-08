@@ -25,7 +25,6 @@ import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 
@@ -35,6 +34,8 @@ class BuildInfoTask extends DefaultTask {
     public static final String TRAVIS_BUILD_ID = "TRAVIS_BUILD_ID"
     public static final String GITHUB_BUILD_ID = "GITHUB_RUN_ID"
     public static final String CODEBUILD_BUILD_ID = "CODEBUILD_BUILD_ID"
+    public static final String GENERIC_BUILD_ID = "BUILD_ID"
+    public static final String COMMIT_SHA = "COMMIT_SHA"
 
     @OutputDirectory
     final DirectoryProperty outputDirectory
@@ -52,7 +53,9 @@ class BuildInfoTask extends DefaultTask {
     final Property<String> buildIdKey
 
     @Input
-    @Optional
+    final Property<String> commitShaKey
+
+    @Input
     final Provider<String> buildIdProvider
 
     @Input
@@ -64,15 +67,21 @@ class BuildInfoTask extends DefaultTask {
     @Input
     final Provider<String> nameProvider
 
+    @Input
+    final Provider<String> commitShaProvider
+
     BuildInfoTask() {
         outputDirectory = project.objects.directoryProperty()
         versionKey = project.objects.property(String)
         nameKey = project.objects.property(String)
         groupKey = project.objects.property(String)
         buildIdKey = project.objects.property(String)
+        commitShaKey = project.objects.property(String)
         buildIdProvider = envVar(TRAVIS_BUILD_ID)
             .orElse(envVar(GITHUB_BUILD_ID))
             .orElse(envVar(CODEBUILD_BUILD_ID))
+            .orElse(envVar(GENERIC_BUILD_ID))
+        commitShaProvider = envVar(COMMIT_SHA)
         versionProvider = project.providers.provider { String.valueOf(project.version) }.forUseAtConfigurationTime()
         groupProvider = project.providers.provider { String.valueOf(project.group) }.forUseAtConfigurationTime()
         nameProvider = project.providers.provider { project.name }.forUseAtConfigurationTime()
@@ -114,6 +123,11 @@ class BuildInfoTask extends DefaultTask {
             String getName() {
                 nameKey.get()
             }
+
+            @Override
+            String getCommitSha() {
+                commitShaKey.get()
+            }
         }
     }
 
@@ -138,6 +152,11 @@ class BuildInfoTask extends DefaultTask {
             String getName() {
                 nameProvider.get()
             }
+
+            @Override
+            String getCommitSha() {
+                commitShaProvider.orNull
+            }
         }
     }
 
@@ -145,6 +164,9 @@ class BuildInfoTask extends DefaultTask {
         Properties props = new Properties()
         if (values.buildId) {
             props.setProperty(labels.buildId, values.buildId)
+        }
+        if (values.commitSha) {
+            props.setProperty(labels.commitSha, values.commitSha)
         }
         props.setProperty(labels.name, values.name)
         props.setProperty(labels.group, values.group)

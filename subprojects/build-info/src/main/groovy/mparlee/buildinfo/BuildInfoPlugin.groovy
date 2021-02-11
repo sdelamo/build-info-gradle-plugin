@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovycalamari.buildinfo
+package mparlee.buildinfo
 
 import groovy.transform.CompileStatic
 import org.gradle.api.Action
@@ -44,6 +44,7 @@ class BuildInfoPlugin implements Plugin<Project> {
                 buildInfo.nameKey.convention(extension.nameKey)
                 buildInfo.groupKey.convention(extension.groupKey)
                 buildInfo.buildIdKey.convention(extension.buildIdKey)
+                buildInfo.commitShaKey.convention(extension.commitShaKey)
             }
         })
         project.pluginManager.withPlugin('java') {

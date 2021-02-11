@@ -20,5 +20,5 @@ jobs:
     - name: Publish Documentation
       run: ./publish.sh
       env:
-        GITHUB_SLUG: sdelamo/build-info-gradle-plugin
+        GITHUB_SLUG: mparlee/build-info-gradle-plugin
         GH_TOKEN: ${{ secrets.GH_TOKEN }}

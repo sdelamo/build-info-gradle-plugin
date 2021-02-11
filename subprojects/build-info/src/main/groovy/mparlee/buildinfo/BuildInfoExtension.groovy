@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovycalamari.buildinfo
+package mparlee.buildinfo
 
 import groovy.transform.CompileStatic
 import org.gradle.api.Project
@@ -29,6 +29,7 @@ class BuildInfoExtension {
     public static final String DEFAULT_KEY_VERSION = "version"
     public static final String DEFAULT_KEY_GROUP = "group"
     public static final String DEFAULT_KEY_NAME = "name"
+    public static final String DEFAULT_KEY_COMMIT_SHA = "commitsha"
 
     final DirectoryProperty outputDirectory
 
@@ -39,6 +40,8 @@ class BuildInfoExtension {
     final Property<String> groupKey
 
     final Property<String> buildIdKey
+
+    final Property<String> commitShaKey
 
     BuildInfoExtension(Project project) {
         outputDirectory = project.objects.directoryProperty()
@@ -51,5 +54,7 @@ class BuildInfoExtension {
                 .convention(DEFAULT_KEY_GROUP)
         nameKey = project.objects.property(String)
                 .convention(DEFAULT_KEY_NAME)
+        commitShaKey = project.objects.property(String)
+                .convention(DEFAULT_KEY_COMMIT_SHA)
     }
 }

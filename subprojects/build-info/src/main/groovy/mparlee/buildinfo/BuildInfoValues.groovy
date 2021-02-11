@@ -15,9 +15,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovycalamari.buildinfo
+package mparlee.buildinfo
 
-interface BuildInfoLabels {
+interface BuildInfoValues {
 
     String getBuildId()
 
@@ -26,4 +26,6 @@ interface BuildInfoLabels {
     String getGroup()
 
     String getName()
+
+    String getCommitSha()
 }

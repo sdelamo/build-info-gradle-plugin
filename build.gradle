@@ -23,8 +23,8 @@ plugins {
 
 ext {
     githubSlug = 'build-info-gradle-plugin'
-    githubOrg = 'sdelamo'
-    bintrayUserOrg = 'groovycalamari'
+    githubOrg = 'mparlee'
+    bintrayUserOrg = 'mparlee'
 }
 
 if (System.getenv('BINTRAY_USER') != null) {
@@ -43,9 +43,9 @@ config {
 
     info {
         name        = 'Gradle Plugin to generate a build-info.properties'
-        vendor      = 'Groovy Calamari'
+        vendor      = 'Michael Parlee'
         description = 'Gradle Plugin to generate a build-info.properties It can be used by frameworks such as Micronaut and Spring to expose values in the info endpoint'
-        inceptionYear = '2020'
+        inceptionYear = '2021'
 
         links {
             website      = "https://github.com/${githubOrg}/${githubSlug}"
@@ -54,8 +54,8 @@ config {
         }
         people {
             person {
-                id    = 'sdelamo'
-                name  = 'Sergio del Amo'
+                id    = 'mparlee'
+                name  = 'Michael Parlee'
                 roles = ['developer']
             }
         }

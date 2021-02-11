@@ -13,7 +13,7 @@ Check the installation instructions in the https://plugins.gradle.org/plugin/gro
 
 If a META-INF/build-info.properties file is available on the classpath, https://micronaut.io[Micronaut framework]'s https://docs.micronaut.io/latest/api/io/micronaut/management/endpoint/info/source/BuildInfoSource.html[BuildInfoSource] exposes the values in that file under the `build` key.
 
-This Gradle plugin adds a task `generateBuildInfo` which is executed before the `classes` task. The task generates a `build-info.properties` file at `build/classes/java/META-INFO/build-info.properties`. The generated properties file includes `version`, `name`, `group` and optionally `buildid`. `buildid` is set to value of any of the following environment variables (https://docs.travis-ci.com/user/environment-variables/#default-environment-variables[TRAVIS_BUILD_ID], `GITHUB_RUN_ID`, `CODEBUILD_BUILD_ID`).
+This Gradle plugin adds a task `generateBuildInfo` which is executed before the `classes` task. The task generates a `build-info.properties` file at `build/classes/java/META-INFO/build-info.properties`. The generated properties file includes `version`, `name`, `group` and optionally `buildid` and `commitsha`. `buildid` is set to value of any of the following environment variables (https://docs.travis-ci.com/user/environment-variables/#default-environment-variables[TRAVIS_BUILD_ID], `GITHUB_RUN_ID`, `CODEBUILD_BUILD_ID`, `BUILD_ID`).
 
 == How to use it
 
@@ -41,7 +41,7 @@ apply the plugin:
 ----
 plugins {
   ...
-  id "groovycalamari.build-info" version "0.0.2"
+  id "groovycalamari.build-info" version "0.0.3"
 }
 ----
 
@@ -72,6 +72,8 @@ You can override the defaults values with the extension `buildInfo`
 | `name`
 | groupKey
 | `group`
+| commitShaKey
+| `commitsha`
 |===
 
 Example:
@@ -84,6 +86,7 @@ buildInfo {
     versionKey = 'version'
     nameKey = 'name'
     groupKey = 'group'
+    commitShaKey = 'commitsha'
 }
 ----
 

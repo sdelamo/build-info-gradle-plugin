@@ -2,12 +2,12 @@
 
 - https://github.com/sdelamo/build-info-gradle-plugin[Code Repository]
 - https://github.com/sdelamo/build-info-gradle-plugin/releases[Releases]
-- https://bintray.com/beta/#/groovycalamari/maven/build-info-gradle-plugin[Artifacts]
+- https://bintray.com/beta/#/mparlee/maven/build-info-gradle-plugin[Artifacts]
 - https://sdelamo.github.io/build-info-gradle-plugin/groovydoc/index.html[Groovy Docs]
 
 == Installation
 
-Check the installation instructions in the https://plugins.gradle.org/plugin/groovycalamari.build-info[Gradle Plugin Portal].
+Check the installation instructions in the https://plugins.gradle.org/plugin/mparlee.build-info[Gradle Plugin Portal].
 
 == Description
 
@@ -41,7 +41,7 @@ apply the plugin:
 ----
 plugins {
   ...
-  id "groovycalamari.build-info" version "0.0.3"
+  id "mparlee.build-info" version "0.0.3"
 }
 ----
 

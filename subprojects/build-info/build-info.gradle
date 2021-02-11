@@ -30,7 +30,7 @@ repositories {
     jcenter()
 }
 
-group 'groovycalamari'
+group 'mparlee'
 version projectVersion
 
 dependencies {
@@ -38,8 +38,8 @@ dependencies {
 }
 
 pluginBundle {
-    website = 'https://github.com/sdelamo/build-info-gradle-plugin'
-    vcsUrl = 'https://github.com/sdelamo/build-info-gradle-plugin'
+    website = 'https://github.com/mparlee/build-info-gradle-plugin'
+    vcsUrl = 'https://github.com/mparlee/build-info-gradle-plugin'
     description = 'Generates a build-info.properties file'
     tags = ['build', 'micronaut', 'spring-boot', 'actuator', 'management']
     plugins {
@@ -52,8 +52,8 @@ pluginBundle {
 gradlePlugin {
     plugins {
         buildinfoPlugin {
-            id = 'groovycalamari.build-info'
-            implementationClass = 'groovycalamari.buildinfo.BuildInfoPlugin'
+            id = 'mparlee.build-info'
+            implementationClass = 'mparlee.buildinfo.BuildInfoPlugin'
         }
     }
 }

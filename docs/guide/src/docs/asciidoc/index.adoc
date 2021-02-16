@@ -7,7 +7,7 @@
 
 == Installation
 
-Check the installation instructions in the https://plugins.gradle.org/plugin/mparlee.build-info[Gradle Plugin Portal].
+Check the installation instructions in the https://plugins.gradle.org/plugin/io.github.mparlee.build-info[Gradle Plugin Portal].
 
 == Description
 
@@ -41,7 +41,7 @@ apply the plugin:
 ----
 plugins {
   ...
-  id "mparlee.build-info" version "0.0.3"
+  id "io.github.mparlee.build-info" version "0.0.3"
 }
 ----
 

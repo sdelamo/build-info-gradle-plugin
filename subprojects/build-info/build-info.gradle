@@ -30,7 +30,7 @@ repositories {
     jcenter()
 }
 
-group 'mparlee'
+group 'io.github.mparlee'
 version projectVersion
 
 dependencies {
@@ -52,7 +52,7 @@ pluginBundle {
 gradlePlugin {
     plugins {
         buildinfoPlugin {
-            id = 'mparlee.build-info'
+            id = 'io.github.mparlee.build-info'
             implementationClass = 'mparlee.buildinfo.BuildInfoPlugin'
         }
     }

@@ -25,6 +25,7 @@ import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 
@@ -53,9 +54,11 @@ class BuildInfoTask extends DefaultTask {
     final Property<String> buildIdKey
 
     @Input
+    @Optional
     final Property<String> commitShaKey
 
     @Input
+    @Optional
     final Provider<String> buildIdProvider
 
     @Input

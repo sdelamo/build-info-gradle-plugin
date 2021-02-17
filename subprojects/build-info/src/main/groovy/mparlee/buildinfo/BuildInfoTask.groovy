@@ -54,7 +54,6 @@ class BuildInfoTask extends DefaultTask {
     final Property<String> buildIdKey
 
     @Input
-    @Optional
     final Property<String> commitShaKey
 
     @Input
@@ -71,6 +70,7 @@ class BuildInfoTask extends DefaultTask {
     final Provider<String> nameProvider
 
     @Input
+    @Optional
     final Provider<String> commitShaProvider
 
     BuildInfoTask() {

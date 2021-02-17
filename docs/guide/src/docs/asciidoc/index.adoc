@@ -41,7 +41,7 @@ apply the plugin:
 ----
 plugins {
   ...
-  id "io.github.mparlee.build-info" version "0.0.3"
+  id "io.github.mparlee.build-info" version "0.0.4"
 }
 ----
 
